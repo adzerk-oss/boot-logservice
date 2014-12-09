@@ -14,7 +14,7 @@ your life.
 
 ## Usage
 
-First, craft a [Logback configuration](logback-config) in
+First, craft a [Logback configuration][logback-config] in
 [Hiccup][hiccup]-style XML in your `build.boot`, like this:
 
 ```clojure
