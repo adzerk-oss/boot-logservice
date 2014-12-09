@@ -59,10 +59,10 @@ Initialize the log service and configure `tools.logging` to use it:
 (alter-var-root #'log/*logger-factory* (constantly (log-service/make-factory log-config)))
 ```
 
-Finally, log things:
+Wow:
 
 ```clojure
-(log/info "wow")
+(log/info "Wow")
 ```
 
 ## Caveats
