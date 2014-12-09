@@ -78,7 +78,7 @@ Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
 [1]:                https://github.com/boot-clj/boot
-[2]:                http://clojars.org/adzerk/boot-logservice/latest-version.svg?cache=1
+[2]:                http://clojars.org/adzerk/boot-logservice/latest-version.svg?cache=2
 [SLF4J]:            http://www.slf4j.org/
 [logback]:          http://logback.qos.ch/
 [pods]:             https://github.com/boot-clj/boot/wiki/Pods
