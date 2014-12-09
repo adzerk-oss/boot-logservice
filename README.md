@@ -65,6 +65,13 @@ Finally, log things:
 (log/info "wow")
 ```
 
+## Caveats
+
+`clojure.tools.logging/error` takes an Exception argument that is
+converted to a string before logging.  Unfortunately, only
+print-readable objects can pass through the pod to the underlying
+logger.
+
 ## Thanks
 
 Much was learned from the logging configurations in the

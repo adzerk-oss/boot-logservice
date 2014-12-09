@@ -37,7 +37,7 @@
             (enabled? (get-logger* ~(str logger-ns)) ~level)))
         (write! [logger level e msg]
           (pod/eval-in worker-pod
-            (write! (get-logger* ~(str logger-ns)) ~level ~e ~msg)))))))
+            (write! (get-logger* ~(str logger-ns)) ~level ~(str e) ~msg)))))))
 
 (defn stringify-xml
   [worker-pod xml]
