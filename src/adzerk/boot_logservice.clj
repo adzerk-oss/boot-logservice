@@ -51,14 +51,14 @@
                    :when (= sym 'org.clojure/tools.logging)] coord))
       (throw (RuntimeException. "Must provide org.clojure/tools.logging"))))
 
-(defn make-factory
-  [xml]
+(defn make-factory [& [xml]]
   (let [logback-tmpdir (core/mksrcdir!)
         logging-dep    (tools-logging-dep (core/get-env :dependencies))
         worker-pod     (pod/make-pod
                         (assoc (core/get-env)
                           :dependencies (conj *dependencies* logging-dep)
-                          :src-paths #{(.getPath logback-tmpdir)}))
-        xml-string     (stringify-xml worker-pod xml)]
-    (spit (io/file logback-tmpdir "logback.xml") xml-string)
+                          :src-paths #{(.getPath logback-tmpdir)}))]
+    (when xml
+      (let [xml-string (stringify-xml worker-pod xml)]
+        (spit (io/file logback-tmpdir "logback.xml") xml-string)))
     (slf4j-service-factory-factory worker-pod)))
