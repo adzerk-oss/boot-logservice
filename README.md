@@ -14,7 +14,7 @@ your life.
 
 ## Usage
 
-First, craft a [Logback configuration](logback-config) in
+First, craft a [Logback configuration][logback-config] in
 [Hiccup][hiccup]-style XML in your `build.boot`, like this:
 
 ```clojure
@@ -39,21 +39,21 @@ First, craft a [Logback configuration](logback-config) in
 ```
 
 Then, add [tools.logging][tools-logging] and this library to your
-dependencies, and `require`:
+dependencies:
 
 ```clojure
 (set-env! :dependencies '[[org.clojure/tools.logging "0.3.1"]
                           [adzerk/boot-logservice "X.Y.Z"]])
 ```
 
-Next, require these libraries:
+Next, `require` things:
 
 ```clojure
 (require '[adzerk.boot-logservice :as log-service]
          '[clojure.tools.logging  :as log])
 ```
          
-Initialize the log service and configure tools.logging to use it:
+Initialize the log service and configure `tools.logging` to use it:
 
 ```clojure
 (alter-var-root #'log/*logger-factory* (constantly (log-service/make-factory log-config)))
