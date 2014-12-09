@@ -1,6 +1,6 @@
 # boot-logservice
 
-[![Clojars Project][2]][3]
+![Clojars Project][2]
 
 This library for [Boot][1] projects does something boring in an
 exciting new way: it configures
