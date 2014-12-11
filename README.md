@@ -2,7 +2,7 @@
 
 [![Clojars Project][clojars-badge]][clojars-page]
 
-This library for [Boot][1] projects does something boring in an
+This library for [Boot] projects does something boring in an
 exciting new way: it configures
 [tools.logging][tools-logging] to use
 [SLF4J][slf4j] and [logback-classic][logback] in classpath isolation,
@@ -84,6 +84,7 @@ Copyright © 2014 Adzerk
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
+[Boot]:             https://github.com/boot-clj/boot
 [clojars-badge]:    http://clojars.org/adzerk/boot-logservice/latest-version.svg?cache=2
 [clojars-page]:     https://clojars.org/adzerk/boot-logservice
 [SLF4J]:            http://www.slf4j.org/
