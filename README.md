@@ -1,6 +1,6 @@
 # boot-logservice
 
-[![Clojars Project][2]](https://clojars.org/adzerk/boot-logservice)
+[![Clojars Project][clojars-badge]][clojars-page]
 
 This library for [Boot][1] projects does something boring in an
 exciting new way: it configures
@@ -84,8 +84,8 @@ Copyright © 2014 Adzerk
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
-[1]:                https://github.com/boot-clj/boot
-[2]:                http://clojars.org/adzerk/boot-logservice/latest-version.svg?cache=2
+[clojars-badge]:    http://clojars.org/adzerk/boot-logservice/latest-version.svg?cache=2
+[clojars-page]:     https://clojars.org/adzerk/boot-logservice
 [SLF4J]:            http://www.slf4j.org/
 [logback]:          http://logback.qos.ch/
 [pods]:             https://github.com/boot-clj/boot/wiki/Pods
