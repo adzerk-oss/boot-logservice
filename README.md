@@ -68,7 +68,7 @@ Wow:
 ## Caveats
 
 `clojure.tools.logging/error` takes an Exception argument that is
-converted to a string before logging.  Unfortunately, only
+converted to a string before logging.  This is necessary because only
 print-readable objects can pass through the pod to the underlying
 logger.  It's not clear to us yet if this limitation prohibits anything important.
 

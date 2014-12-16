@@ -17,7 +17,7 @@
 
 (defn slf4j-service-factory-factory    ;lol
   [worker-pod]
-  (pod/eval-in worker-pod
+  (pod/with-eval-in worker-pod
     (require '[clojure.tools.logging.impl :refer [slf4j-factory enabled? write! get-logger]]
              '[boot.pod :as pod])
     (def factory (slf4j-factory))
@@ -33,15 +33,24 @@
     (get-logger [_ logger-ns]
       (reify Logger
         (enabled? [logger level]
-          (pod/eval-in worker-pod
+          (pod/with-eval-in worker-pod
             (enabled? (get-logger* ~(str logger-ns)) ~level)))
         (write! [logger level e msg]
-          (pod/eval-in worker-pod
-            (write! (get-logger* ~(str logger-ns)) ~level ~(str e) ~msg)))))))
+          (let [msg-str (if e (str msg " - " (class e) ": " (.getMessage e)) msg)]
+            (pod/with-eval-in worker-pod
+              (let [logger (get-logger* ~(str logger-ns))]
+                (condp = ~level
+                  :trace (.trace logger ~msg-str)
+                  :debug (.debug logger ~msg-str)
+                  :info  (.info  logger ~msg-str)
+                  :warn  (.warn  logger ~msg-str)
+                  :error (.error logger ~msg-str)
+                  :fatal (.error logger ~msg-str)
+                  (throw (IllegalArgumentException. (str ~level))))))))))))
 
 (defn stringify-xml
   [worker-pod xml]
-  (pod/eval-in worker-pod
+  (pod/with-eval-in worker-pod
     (require '[clojure.data.xml :refer [emit-str sexp-as-element emit]])
     (emit-str (sexp-as-element ~xml))))
 
@@ -52,7 +61,7 @@
       (throw (RuntimeException. "Must provide org.clojure/tools.logging"))))
 
 (defn make-factory [& [xml]]
-  (let [logback-tmpdir (core/mksrcdir!)
+  (let [logback-tmpdir (core/temp-dir!)
         logging-dep    (tools-logging-dep (core/get-env :dependencies))
         worker-pod     (pod/make-pod
                         (assoc (core/get-env)
