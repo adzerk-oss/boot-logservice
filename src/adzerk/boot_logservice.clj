@@ -19,7 +19,8 @@
   [worker-pod]
   (pod/with-eval-in worker-pod
     (require '[clojure.tools.logging.impl :refer [slf4j-factory enabled? write! get-logger]]
-             '[boot.pod :as pod])
+             '[boot.pod :as pod]
+             '[clojure.java.io :as io])
     (def factory (slf4j-factory))
     (def loggers (atom {}))
     (defn get-logger* [logger-ns]
@@ -48,26 +49,26 @@
                   :fatal (.error logger ~msg-str)
                   (throw (IllegalArgumentException. (str ~level))))))))))))
 
-(defn stringify-xml
-  [worker-pod xml]
-  (pod/with-eval-in worker-pod
-    (require '[clojure.data.xml :refer [emit-str sexp-as-element emit]])
-    (emit-str (sexp-as-element ~xml))))
-
 (defn tools-logging-dep
   [depvec]
   (or (first (for [[sym v :as coord] depvec
                    :when (= sym 'org.clojure/tools.logging)] coord))
-      (throw (RuntimeException. "Must provide org.clojure/tools.logging"))))
+      (throw (RuntimeException. "You must supply a org.clojure/tools.logging dependency in order to use boot-logservice"))))
+
+(defn write-logback-xml!
+  [worker-pod tempdir xml]
+  (when xml
+    (spit (io/file tempdir "logback.xml")
+          (pod/with-eval-in worker-pod
+            (require '[clojure.data.xml :refer [emit-str sexp-as-element emit]])
+            (emit-str (sexp-as-element ~xml))))))
 
 (defn make-factory [& [xml]]
   (let [logback-tmpdir (core/temp-dir!)
         logging-dep    (tools-logging-dep (core/get-env :dependencies))
-        worker-pod     (pod/make-pod
-                        (assoc (core/get-env)
-                          :dependencies (conj *dependencies* logging-dep)
-                          :source-paths #{(.getPath logback-tmpdir)}))]
-    (when xml
-      (let [xml-string (stringify-xml worker-pod xml)]
-        (spit (io/file logback-tmpdir "logback.xml") xml-string)))
+        pod-env        (assoc (core/get-env)
+                         :dependencies (conj *dependencies* logging-dep)
+                         :directories #{(.getPath logback-tmpdir)})
+        worker-pod     (pod/make-pod pod-env)]
+    (write-logback-xml! worker-pod logback-tmpdir xml)
     (slf4j-service-factory-factory worker-pod)))
