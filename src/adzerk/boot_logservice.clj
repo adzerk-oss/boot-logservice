@@ -66,7 +66,7 @@
         worker-pod     (pod/make-pod
                         (assoc (core/get-env)
                           :dependencies (conj *dependencies* logging-dep)
-                          :src-paths #{(.getPath logback-tmpdir)}))]
+                          :source-paths #{(.getPath logback-tmpdir)}))]
     (when xml
       (let [xml-string (stringify-xml worker-pod xml)]
         (spit (io/file logback-tmpdir "logback.xml") xml-string)))
