@@ -84,8 +84,8 @@ Copyright © 2014 Adzerk
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
-[travis-badge]:     https://travis-ci.org/adzerk/boot-logservice.png?branch=master
-[travis-build]:     https://travis-ci.org/adzerk/boot-logservice
+[travis-badge]:     https://travis-ci.org/adzerk-oss/boot-logservice.png?branch=master
+[travis-build]:     https://travis-ci.org/adzerk-oss/boot-logservice
 [Boot]:             https://github.com/boot-clj/boot
 [clojars-badge]:    http://clojars.org/adzerk/boot-logservice/latest-version.svg?cache=3
 [clojars-page]:     https://clojars.org/adzerk/boot-logservice
