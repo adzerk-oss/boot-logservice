@@ -52,12 +52,15 @@ Next, `require` things:
 (require '[adzerk.boot-logservice :as log-service]
          '[clojure.tools.logging  :as log])
 ```
-         
+
 Initialize the log service and configure `tools.logging` to use it:
 
 ```clojure
 (alter-var-root #'log/*logger-factory* (constantly (log-service/make-factory log-config)))
 ```
+
+> Note: `make-factory` defaults to printing to STDOUT when no `log-config` is
+  supplied.
 
 Wow:
 
@@ -79,7 +82,7 @@ Much was learned from the logging configurations in the
 
 ## License
 
-Copyright © 2014 Adzerk
+Copyright Adzerk
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
