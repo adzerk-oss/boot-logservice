@@ -64,7 +64,7 @@
             (emit-str (sexp-as-element ~xml))))))
 
 (defn make-factory [& [xml]]
-  (let [logback-tmpdir (core/temp-dir!)
+  (let [logback-tmpdir (core/tmp-dir!)
         logging-dep    (tools-logging-dep (core/get-env :dependencies))
         pod-env        (assoc (core/get-env)
                          :dependencies (conj *dependencies* logging-dep)

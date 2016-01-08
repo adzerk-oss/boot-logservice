@@ -1,23 +1,22 @@
 (set-env!
  :source-paths  #{"src"}
- :dependencies '[[org.clojure/clojure       "1.6.0"     :scope "provided"]
-                 [boot/core                 "2.0.0-rc1" :scope "provided"]
-                 [adzerk/bootlaces          "0.1.5"     :scope "test"]
-                 [org.clojure/tools.logging "0.3.1"     :scope "test"]])
+ :dependencies '[[org.clojure/clojure       "1.7.0"  :scope "provided"]
+                 [adzerk/bootlaces          "0.1.13" :scope "test"]
+                 [org.clojure/tools.logging "0.3.1"  :scope "test"]])
 
 (require '[adzerk.bootlaces            :refer :all]
          '[clojure.test                :as    test :refer [deftest is run-tests]]
          '[adzerk.boot-logservice      :as    log-service]
          '[clojure.tools.logging       :as    log])
 
-(def +version+ "1.0.0")
+(def +version+ "1.1.0")
 
 (bootlaces! +version+)
 
 (ns-unmap 'boot.user 'test)
 (deftask test []
   (with-pre-wrap fileset
-    (let [log-dir (temp-dir!)
+    (let [log-dir (tmp-dir!)
           config  [:configuration {:scan true, :scanPeriod "10 seconds"}
                    [:appender {:name "FILE" :class "ch.qos.logback.core.rolling.RollingFileAppender"}
                     [:encoder [:pattern "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"]]
@@ -33,11 +32,13 @@
         (log/info "This should result in a log file being created on disk.")
         (let [logs (.listFiles log-dir)]
           (is (= 1 (count logs)))
-          (println "Log file content:" (slurp (first logs))))))
-    (let [report (run-tests 'boot.user)]
-      (if-not (every? zero? (map report [:fail :error]))
-        (throw (ex-info "Tests failed" report))))
-    fileset))
+          (println "Log file content:" (slurp (first logs)))))
+      (let [report (run-tests 'boot.user)]
+        (if-not (every? zero? (map report [:fail :error]))
+          (throw (ex-info "Tests failed" report))))
+      (-> fileset
+          (add-resource log-dir)
+          commit!))))
 
 (task-options!
  pom  {:project     'adzerk/boot-logservice
@@ -45,5 +46,5 @@
        :description "Carefree Logback logging in boot projects"
        :url         "https://github.com/adzerk/boot-logservice"
        :scm         {:url "https://github.com/adzerk/boot-logservice"}
-       :license     {:name "Eclipse Public License"
-                     :url  "http://www.eclipse.org/legal/epl-v10.html"}})
+       :license     {"Eclipse Public License"
+                     "http://www.eclipse.org/legal/epl-v10.html"}})
