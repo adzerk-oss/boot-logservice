@@ -28,26 +28,28 @@
         logger
         (let [new-logger (get-logger factory logger-ns)]
           (swap! loggers assoc logger-ns new-logger)
-          new-logger))))
+          new-logger)))
+    (defn enabled?* [logger-ns level]
+      (enabled? (get-logger* logger-ns) (keyword level)))
+    (defn write!* [logger-ns level msg-str]
+      (let [logger (get-logger* logger-ns)]
+        (condp = level
+          "trace" (.trace logger msg-str)
+          "debug" (.debug logger msg-str)
+          "info"  (.info  logger msg-str)
+          "warn"  (.warn  logger msg-str)
+          "error" (.error logger msg-str)
+          "fatal" (.error logger msg-str)
+          (throw (IllegalArgumentException. level))))))
   (reify LoggerFactory
     (name [_] "org.slf4j-service")
     (get-logger [_ logger-ns]
       (reify Logger
         (enabled? [logger level]
-          (pod/with-eval-in worker-pod
-            (enabled? (get-logger* ~(str logger-ns)) ~level)))
+          (.invoke worker-pod "pod/enabled?*" (str logger-ns) (name level)))
         (write! [logger level e msg]
           (let [msg-str (if e (str msg " - " (class e) ": " (.getMessage e)) msg)]
-            (pod/with-eval-in worker-pod
-              (let [logger (get-logger* ~(str logger-ns))]
-                (condp = ~level
-                  :trace (.trace logger ~msg-str)
-                  :debug (.debug logger ~msg-str)
-                  :info  (.info  logger ~msg-str)
-                  :warn  (.warn  logger ~msg-str)
-                  :error (.error logger ~msg-str)
-                  :fatal (.error logger ~msg-str)
-                  (throw (IllegalArgumentException. (str ~level))))))))))))
+            (.invoke worker-pod "pod/write!*" (str logger-ns) (name level) msg-str)))))))
 
 (defn tools-logging-dep
   [depvec]
