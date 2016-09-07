@@ -9,7 +9,7 @@
          '[adzerk.boot-logservice      :as    log-service]
          '[clojure.tools.logging       :as    log])
 
-(def +version+ "1.1.0")
+(def +version+ "1.2.0")
 
 (bootlaces! +version+)
 
