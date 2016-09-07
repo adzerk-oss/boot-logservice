@@ -30,6 +30,7 @@
       (alter-var-root #'log/*logger-factory* (constantly (log-service/make-factory config)))
       (deftest log-file-created
         (log/info "This should result in a log file being created on disk.")
+        (log/with-logs 'some.ns (println "This should work too"))
         (let [logs (.listFiles log-dir)]
           (is (= 1 (count logs)))
           (println "Log file content:" (slurp (first logs)))))
